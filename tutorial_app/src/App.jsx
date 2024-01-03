@@ -189,10 +189,29 @@ function App() {
     content = <Article title={_title} body={_body}></Article> 
     
     // mode가 READ일때만 contextControl 지정 -> Update 보임
-    contextControl = <li><a href={"/update/"+id} onClick={event=>{
-      event.preventDefault();
-      setMode('UPDATE');
-    }}>Update</a></li>
+    contextControl = <>
+      <li>
+        <a href={"/update/"+id} onClick={event=>{
+          event.preventDefault();
+          setMode('UPDATE');
+        }}>Update</a>
+      </li>
+      {/* Delete 기능 실습 */}
+      <li><input type="button" value="Delete" onClick={()=>{
+        // newTopics라는 빈 배열을 만들어서
+        const newTopics = [];
+        for (let i=0; i<topics.length; i++) {
+          // 삭제할 원소를 제외한 값들을 push
+          if (topics[i].id !== id) newTopics.push(topics[i]);
+        }
+        // 삭제할 원소가 없는 newTopics로 topics 업데이트
+        setTopics(newTopics);
+        // 해당 id의 원소가 없어 READ가 안되니 WELCOME으로
+        setMode('WELCOME');
+
+        // 중요! : 위의 방식으로 Delete 기능을 구현하면, id가 안 이어지지 않을까? -> 삭제해도 id가 이어지도록 Delete 기능을 구현해보자
+      }}/></li>
+    </> // 빈 태그(<>) : 복수의 태그를 그룹핑하기 위한 용도 (아무 기능 없음!)
   } else if (mode === 'CREATE') {
     // 입력 폼이 복잡하기 때문에, Create 컴포넌트를 외부에서 정의해 사용
     content = <Create onCreate={(_title, _body)=>{
